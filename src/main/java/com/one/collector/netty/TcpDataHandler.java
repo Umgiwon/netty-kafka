@@ -1,5 +1,6 @@
-package com.one.collector.handler;
+package com.one.collector.netty;
 
+import com.one.collector.domain.dto.DeviceMessage;
 import com.one.collector.kafka.KafkaSender;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -23,17 +24,14 @@ public class TcpDataHandler extends SimpleChannelInboundHandler<ByteBuf> {
         String data = msg.toString(CharsetUtil.UTF_8);
         log.info("수신된 메시지: {}", data);
 
-        // Kafka로 메시지 전송
-        kafkaSender.send(data);
+        // Kafka로 JSON 메시지 전송
+        DeviceMessage message = new DeviceMessage(data, System.currentTimeMillis());
+        kafkaSender.send(message);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.error("Exception : ", cause);
-        log.error("Exception : {}", cause.getMessage());
-
-        cause.printStackTrace();
-
         ctx.close(); // 연결 종료
     }
 }

@@ -104,7 +104,7 @@ kafka-topics.sh --create \
 ### 3. Netty 서버 실행 후 TCP 클라이언트로 메시지 전송
 
 ```bash
-echo "hello kafka!" | nc localhost 9999
+echo '{"deviceId":"COMP-A3","temperature":37.9,"timestamp":"2025-05-12T12:34:56"}' | nc localhost 9999
 ```
 
 ### 4. Kafka Consumer로 메시지 수신 확인

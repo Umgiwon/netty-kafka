@@ -1,5 +1,7 @@
 package com.one.collector.kafka;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -14,13 +16,16 @@ import java.util.Properties;
 @Slf4j
 public class KafkaSender {
     private final KafkaProducer<String, String> producer;
-    private final String topic = "severance-comp-data"; // 전송할 kafka 토픽 이름
+    private final String topic; // 전송할 kafka 토픽 이름
 
-    public KafkaSender() {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    public KafkaSender(String topic, String bootstrapServers) {
+        this.topic = topic;
 
         // kafka 설정 정보 구성
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"); // Kafka 서버 주소
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers); // Kafka 서버 주소
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName()); // key 직렬화 방식
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName()); // value 직렬화 방식
 
@@ -30,17 +35,22 @@ public class KafkaSender {
 
     /**
      * kafka에 메시지를 전송하는 메소드
-     * @param message 메시지
+     * @param messageObject 메시지 오브젝트
      */
-    public void send(String message) {
-        ProducerRecord<String, String> record = new ProducerRecord<>(topic, message);
-        producer.send(record, (metadata, exception) -> {
-            if(exception != null) {
-                log.error("Kafka 전송 실패: {}", exception.getMessage());
-            } else {
-                log.info("Kafka 전송 성공 (offset={}): {}", metadata.offset(), message);
-            }
-        });
+    public void send(Object messageObject) {
+        try {
+            String json = objectMapper.writeValueAsString(messageObject);
+            ProducerRecord<String, String> record = new ProducerRecord<>(topic, json);
+            producer.send(record, (metadata, exception) -> {
+                if (exception != null) {
+                    log.error("Kafka 전송 실패: {}", exception.getMessage());
+                } else {
+                    log.info("Kafka 전송 성공 (offset={}): {}", metadata.offset(), json);
+                }
+            });
+        } catch (JsonProcessingException e) {
+            log.error("JSON 직렬화 실패", e);
+        }
     }
 
     public void close() {

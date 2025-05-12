@@ -1,6 +1,6 @@
 package com.one.collector.netty;
 
-import com.one.collector.handler.TcpDataHandler;
+import com.one.collector.kafka.KafkaConfig;
 import com.one.collector.kafka.KafkaSender;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NettyServer {
 
-    private final KafkaSender kafkaSender = new KafkaSender();
+    private final KafkaSender kafkaSender = new KafkaSender("severance-comp-data", "localhost:9092");
 
     /**
      * Netty 서버 실행
@@ -60,10 +60,5 @@ public class NettyServer {
             bossGroup.shutdownGracefully();
             kafkaSender.close();
         }
-    }
-
-    public static void main(String[] args) throws InterruptedException {
-        // 9999번 포트로 Netty 서버 실행
-        new NettyServer().start(9999);
     }
 }
