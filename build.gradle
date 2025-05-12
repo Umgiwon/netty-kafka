@@ -27,10 +27,7 @@ dependencies {
     // kafka
     implementation 'org.apache.kafka:kafka-clients:3.7.0'
 
-    // Lombok
-
     // Lombok (버전 명시)
-    // Lombok
     def lombokVersion = '1.18.30'
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
