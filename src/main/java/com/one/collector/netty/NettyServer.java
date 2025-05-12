@@ -1,6 +1,7 @@
-package com.one.collector;
+package com.one.collector.netty;
 
 import com.one.collector.handler.TcpDataHandler;
+import com.one.collector.kafka.KafkaSender;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

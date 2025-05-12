@@ -1,4 +1,4 @@
-package com.one.collector;
+package com.one.collector.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -38,7 +38,7 @@ public class KafkaSender {
             if(exception != null) {
                 log.error("Kafka 전송 실패: {}", exception.getMessage());
             } else {
-                log.info("Kafka 전송 성공: {}", metadata.offset());
+                log.info("Kafka 전송 성공 (offset={}): {}", metadata.offset(), message);
             }
         });
     }
