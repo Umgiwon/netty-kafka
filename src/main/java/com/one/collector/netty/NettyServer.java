@@ -1,6 +1,5 @@
 package com.one.collector.netty;
 
-import com.one.collector.kafka.KafkaConfig;
 import com.one.collector.kafka.KafkaSender;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

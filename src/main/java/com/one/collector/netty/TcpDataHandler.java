@@ -13,7 +13,6 @@ public class TcpDataHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
     private final KafkaSender kafkaSender;
 
-    // KafkaSender 주입
     public TcpDataHandler(KafkaSender kafkaSender) {
         this.kafkaSender = kafkaSender;
     }
