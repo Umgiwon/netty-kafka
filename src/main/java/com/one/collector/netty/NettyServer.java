@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NettyServer {
 
-    private final KafkaSender kafkaSender = new KafkaSender("severance-comp-data", "localhost:9092");
+    private final KafkaSender kafkaSender = new KafkaSender("severance-data", "localhost:9092");
 
     /**
      * Netty 서버 실행

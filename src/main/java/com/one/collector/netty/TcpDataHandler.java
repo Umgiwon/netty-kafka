@@ -25,6 +25,7 @@ public class TcpDataHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
         // Kafka로 JSON 메시지 전송
         DeviceMessage message = new DeviceMessage(data, System.currentTimeMillis());
+        log.info("전송 메시지: {}", message);
         kafkaSender.send(message);
     }
 
